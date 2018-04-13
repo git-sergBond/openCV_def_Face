@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0068)http://docs.opencv.org/3.1.0/db/d28/tutorial_cascade_classifier.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<meta name="generator" content="Doxygen 1.8.9.1">
+<title>OpenCV: Cascade Classifier</title>
+<link href="http://docs.opencv.org/3.1.0/opencv.ico" rel="shortcut icon" type="image/x-icon">
+<link href="./OpenCV_ Cascade Classifier_files/tabs.css" rel="stylesheet" type="text/css">
+<script async="" src="./OpenCV_ Cascade Classifier_files/async-ads.js.Без названия"></script><script type="text/javascript" async="" src="./OpenCV_ Cascade Classifier_files/cse.js.Без названия"></script><script type="text/javascript" src="./OpenCV_ Cascade Classifier_files/jquery.js.Без названия"></script>
+<script type="text/javascript" src="./OpenCV_ Cascade Classifier_files/dynsections.js.Без названия"></script>
+<link href="./OpenCV_ Cascade Classifier_files/search.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./OpenCV_ Cascade Classifier_files/searchdata.js.Без названия"></script>
+<script type="text/javascript" src="./OpenCV_ Cascade Classifier_files/search.js.Без названия"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<script type="text/x-mathjax-config;executed=true">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js", "TeX/AMSmath.js", "TeX/AMSsymbols.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+MathJax.Hub.Config(
+{
+  TeX: {
+      Macros: {
+          matTT: [ "\\[ \\left|\\begin{array}{ccc} #1 & #2 & #3\\\\ #4 & #5 & #6\\\\ #7 & #8 & #9 \\end{array}\\right| \\]", 9],
+          fork: ["\\left\\{ \\begin{array}{l l} #1 & \\mbox{#2}\\\\ #3 & \\mbox{#4}\\\\ \\end{array} \\right.", 4],
+          forkthree: ["\\left\\{ \\begin{array}{l l} #1 & \\mbox{#2}\\\\ #3 & \\mbox{#4}\\\\ #5 & \\mbox{#6}\\\\ \\end{array} \\right.", 6],
+          vecthree: ["\\begin{bmatrix} #1\\\\ #2\\\\ #3 \\end{bmatrix}", 3],
+          vecthreethree: ["\\begin{bmatrix} #1 & #2 & #3\\\\ #4 & #5 & #6\\\\ #7 & #8 & #9 \\end{bmatrix}", 9],
+          hdotsfor: ["\\dots", 1],
+          mathbbm: ["\\mathbb{#1}", 1],
+          bordermatrix: ["\\matrix{#1}", 1]
+      }
+  }
+}
+);
+</script><script src="./OpenCV_ Cascade Classifier_files/MathJax.js.Без названия"></script><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style>
+<link href="./OpenCV_ Cascade Classifier_files/doxygen.css" rel="stylesheet" type="text/css">
+<link href="./OpenCV_ Cascade Classifier_files/stylesheet.css" rel="stylesheet" type="text/css">
+<script src="./OpenCV_ Cascade Classifier_files/jsapi" type="text/javascript"></script><link type="text/css" href="./OpenCV_ Cascade Classifier_files/default+en.css" rel="stylesheet"><link type="text/css" href="./OpenCV_ Cascade Classifier_files/default.css" rel="stylesheet"><script type="text/javascript" src="./OpenCV_ Cascade Classifier_files/default+en.I.js.Без названия"></script><style type="text/css">
+.gsc-control-cse {
+font-family: Arial, sans-serif;
+border-color: #FFFFFF;
+background-color: #FFFFFF;
+}
+.gsc-control-cse .gsc-table-result {
+font-family: Arial, sans-serif;
+}
+input.gsc-input, .gsc-input-box, .gsc-input-box-hover, .gsc-input-box-focus {
+border-color: #D9D9D9;
+}
+input.gsc-search-button, input.gsc-search-button:hover, input.gsc-search-button:focus {
+border-color: #666666;
+background-color: #CECECE;
+background-image: none;
+filter: none;
+}
+.gsc-tabHeader.gsc-tabhInactive {
+border-color: #E9E9E9;
+background-color: #E9E9E9;
+}
+.gsc-tabHeader.gsc-tabhActive {
+border-color: #FF9900;
+border-bottom-color: #FFFFFF;
+background-color: #FFFFFF;
+}
+.gsc-tabsArea {
+border-color: #FF9900;
+}
+.gsc-webResult.gsc-result,
+.gsc-results .gsc-imageResult {
+border-color: #FFFFFF;
+background-color: #FFFFFF;
+}
+.gsc-webResult.gsc-result:hover,
+.gsc-imageResult:hover {
+border-color: #FFFFFF;
+background-color: #FFFFFF;
+}
+.gs-webResult.gs-result a.gs-title:link,
+.gs-webResult.gs-result a.gs-title:link b,
+.gs-imageResult a.gs-title:link,
+.gs-imageResult a.gs-title:link b {
+color: #0000CC;
+}
+.gs-webResult.gs-result a.gs-title:visited,
+.gs-webResult.gs-result a.gs-title:visited b,
+.gs-imageResult a.gs-title:visited,
+.gs-imageResult a.gs-title:visited b {
+color: #0000CC;
+}
+.gs-webResult.gs-result a.gs-title:hover,
+.gs-webResult.gs-result a.gs-title:hover b,
+.gs-imageResult a.gs-title:hover,
+.gs-imageResult a.gs-title:hover b {
+color: #0000CC;
+}
+.gs-webResult.gs-result a.gs-title:active,
+.gs-webResult.gs-result a.gs-title:active b,
+.gs-imageResult a.gs-title:active,
+.gs-imageResult a.gs-title:active b {
+color: #0000CC;
+}
+.gsc-cursor-page {
+color: #0000CC;
+}
+a.gsc-trailing-more-results:link {
+color: #0000CC;
+}
+.gs-webResult .gs-snippet,
+.gs-imageResult .gs-snippet,
+.gs-fileFormatType {
+color: #000000;
+}
+.gs-webResult div.gs-visibleUrl,
+.gs-imageResult div.gs-visibleUrl {
+color: #008000;
+}
+.gs-webResult div.gs-visibleUrl-short {
+color: #008000;
+}
+.gs-webResult div.gs-visibleUrl-short {
+display: none;
+}
+.gs-webResult div.gs-visibleUrl-long {
+display: block;
+}
+.gs-promotion div.gs-visibleUrl-short {
+display: none;
+}
+.gs-promotion div.gs-visibleUrl-long {
+display: block;
+}
+.gsc-cursor-box {
+border-color: #FFFFFF;
+}
+.gsc-results .gsc-cursor-box .gsc-cursor-page {
+border-color: #E9E9E9;
+background-color: #FFFFFF;
+color: #0000CC;
+}
+.gsc-results .gsc-cursor-box .gsc-cursor-current-page {
+border-color: #FF9900;
+background-color: #FFFFFF;
+color: #0000CC;
+}
+.gsc-webResult.gsc-result.gsc-promotion {
+border-color: #336699;
+background-color: #FFFFFF;
+}
+.gsc-completion-title {
+color: #0000CC;
+}
+.gsc-completion-snippet {
+color: #000000;
+}
+.gs-promotion a.gs-title:link,
+.gs-promotion a.gs-title:link *,
+.gs-promotion .gs-snippet a:link {
+color: #0000CC;
+}
+.gs-promotion a.gs-title:visited,
+.gs-promotion a.gs-title:visited *,
+.gs-promotion .gs-snippet a:visited {
+color: #0000CC;
+}
+.gs-promotion a.gs-title:hover,
+.gs-promotion a.gs-title:hover *,
+.gs-promotion .gs-snippet a:hover {
+color: #0000CC;
+}
+.gs-promotion a.gs-title:active,
+.gs-promotion a.gs-title:active *,
+.gs-promotion .gs-snippet a:active {
+color: #0000CC;
+}
+.gs-promotion .gs-snippet,
+.gs-promotion .gs-title .gs-promotion-title-right,
+.gs-promotion .gs-title .gs-promotion-title-right * {
+color: #000000;
+}
+.gs-promotion .gs-visibleUrl,
+.gs-promotion .gs-visibleUrl-short {
+color: #008000;
+}</style><style type="text/css">.gscb_a{display:inline-block;font:27px/13px arial,sans-serif}.gsst_a .gscb_a{color:#a1b9ed;cursor:pointer}.gsst_a:hover .gscb_a,.gsst_a:focus .gscb_a{color:#36c}.gsst_a{display:inline-block}.gsst_a{cursor:pointer;padding:0 4px}.gsst_a:hover{text-decoration:none!important}.gsst_b{font-size:16px;padding:0 2px;position:relative;user-select:none;-webkit-user-select:none;white-space:nowrap}.gsst_e{opacity:0.55;}.gsst_a:hover .gsst_e,.gsst_a:focus .gsst_e{opacity:0.72;}.gsst_a:active .gsst_e{opacity:1;}.gsst_f{background:white;text-align:left}.gsst_g{background-color:white;border:1px solid #ccc;border-top-color:#d9d9d9;box-shadow:0 2px 4px rgba(0,0,0,0.2);-webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2);margin:-1px -3px;padding:0 6px}.gsst_h{background-color:white;height:1px;margin-bottom:-1px;position:relative;top:-1px}.gsib_a{width:100%;padding:4px 6px 0}.gsib_a,.gsib_b{vertical-align:top}.gssb_c{border:0;position:absolute;z-index:989}.gssb_e{border:1px solid #ccc;border-top-color:#d9d9d9;box-shadow:0 2px 4px rgba(0,0,0,0.2);-webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2);cursor:default}.gssb_f{visibility:hidden;white-space:nowrap}.gssb_k{border:0;display:block;position:absolute;top:0;z-index:988}.gsdd_a{border:none!important}.gsq_a{padding:0}.gsq_a{padding:0}.gscsep_a{display:none}.gssb_a{padding:0 7px}.gssb_a,.gssb_a td{white-space:nowrap;overflow:hidden;line-height:22px}#gssb_b{font-size:11px;color:#36c;text-decoration:none}#gssb_b:hover{font-size:11px;color:#36c;text-decoration:underline}.gssb_g{text-align:center;padding:8px 0 7px;position:relative}.gssb_h{font-size:15px;height:28px;margin:0.2em;-webkit-appearance:button}.gssb_i{background:#eee}.gss_ifl{visibility:hidden;padding-left:5px}.gssb_i .gss_ifl{visibility:visible}a.gssb_j{font-size:13px;color:#36c;text-decoration:none;line-height:100%}a.gssb_j:hover{text-decoration:underline}.gssb_l{height:1px;background-color:#e5e5e5}.gssb_m{color:#000;background:#fff}.gsfe_a{border:1px solid #b9b9b9;border-top-color:#a0a0a0;box-shadow:inset 0px 1px 2px rgba(0,0,0,0.1);-moz-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.1);-webkit-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.1);}.gsfe_b{border:1px solid #4d90fe;outline:none;box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3);-moz-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3);-webkit-box-shadow:inset 0px 1px 2px rgba(0,0,0,0.3);}.gssb_a{padding:0 9px}.gsib_a{padding-right:8px;padding-left:8px}.gsst_a{padding-top:3px}.gssb_e{border:0}.gssb_l{margin:5px 0}#gsc-i-id1::-webkit-input-placeholder{font-size:14px}#gsc-i-id1:-moz-placeholder{font-size:14px}#gsc-i-id1::-moz-placeholder{font-size:14px}#gsc-i-id1:-ms-input-placeholder{font-size:14px}#gsc-i-id1:focus::-webkit-input-placeholder{color:transparent}#gsc-i-id1:focus:-moz-placeholder{color:transparent}#gsc-i-id1:focus::-moz-placeholder{color:transparent}#gsc-i-id1:focus:-ms-input-placeholder{color:transparent}.gssb_c .gsc-completion-container{position:static}.gssb_c{z-index:5000}.gsc-completion-container table{background:transparent;font-size:inherit;font-family:inherit}.gssb_c > tbody > tr,.gssb_c > tbody > tr > td,.gssb_d,.gssb_d > tbody > tr,.gssb_d > tbody > tr > td,.gssb_e,.gssb_e > tbody > tr,.gssb_e > tbody > tr > td{padding:0;margin:0;border:0}.gssb_a table,.gssb_a table tr,.gssb_a table tr td{padding:0;margin:0;border:0}</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<script>
+  (function() {
+    var cx = '002541620211387084530:kaexgxg7oxu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<div id="___gcse_0"><div class="gsc-control-cse gsc-control-cse-en"><div class="gsc-control-wrapper-cse" dir="ltr"><form class="gsc-search-box gsc-search-box-tools" accept-charset="utf-8"><table cellspacing="0" cellpadding="0" class="gsc-search-box"><tbody><tr><td class="gsc-input"><div class="gsc-input-box " id="gsc-iw-id1"><table cellspacing="0" cellpadding="0" id="gs_id50" class="gstl_50 " style="width: 100%; padding: 0px;"><tbody><tr><td id="gs_tti50" class="gsib_a"><input autocomplete="off" type="text" size="10" class="gsc-input" name="search" title="search" id="gsc-i-id1" style="width: 100%; padding: 0px; border: none; margin: 0px; height: auto; outline: none; background: url(&quot;http://www.google.com/cse/static/images/1x/googlelogo_lightgrey_46x16dp.png&quot;) left center no-repeat rgb(255, 255, 255); text-indent: 48px;" x-webkit-speech="" x-webkit-grammar="builtin:search" lang="en" dir="ltr" spellcheck="false" placeholder="Custom Search"></td><td class="gsib_b"><div class="gsst_b" id="gs_st50" dir="ltr"><a class="gsst_a" href="javascript:void(0)" style="display: none;"><span class="gscb_a" id="gs_cb50">×</span></a></div></td></tr></tbody></table></div><input type="hidden" name="bgresponse" id="bgresponse"></td><td class="gsc-search-button"><input type="image" src="./OpenCV_ Cascade Classifier_files/search_box_icon.png" class="gsc-search-button gsc-search-button-v2" title="search"></td><td class="gsc-clear-button"><div class="gsc-clear-button" title="clear results">&nbsp;</div></td></tr></tbody></table><table cellspacing="0" cellpadding="0" class="gsc-branding"><tbody><tr><td class="gsc-branding-user-defined"></td><td class="gsc-branding-text"><div class="gsc-branding-text">powered by</div></td><td class="gsc-branding-img"><img src="./OpenCV_ Cascade Classifier_files/googlelogo_grey_46x15dp.png" class="gsc-branding-img" srcset="https://www.google.com/cse/static/images/2x/googlelogo_grey_46x15dp.png 2x"></td></tr></tbody></table></form><div class="gsc-results-wrapper-overlay"><div class="gsc-results-close-btn" tabindex="0"></div><div class="gsc-tabsAreaInvisible"><div class="gsc-tabHeader gsc-inline-block gsc-tabhActive">Custom Search</div><span class="gs-spacer"> </span></div><div class="gsc-tabsAreaInvisible"></div><div class="gsc-above-wrapper-area-invisible"><table cellspacing="0" cellpadding="0" class="gsc-above-wrapper-area-container"><tbody><tr><td class="gsc-result-info-container"><div class="gsc-result-info-invisible"></div></td><td class="gsc-orderby-container"><div class="gsc-orderby-invisible"><div class="gsc-orderby-label gsc-inline-block">Sort by:</div><div class="gsc-option-menu-container gsc-inline-block"><div class="gsc-selected-option-container gsc-inline-block"><div class="gsc-selected-option">Relevance</div><div class="gsc-option-selector"></div></div><div class="gsc-option-menu-invisible"><div class="gsc-option-menu-item gsc-option-menu-item-highlighted"><div class="gsc-option">Relevance</div></div><div class="gsc-option-menu-item"><div class="gsc-option">Date</div></div></div></div></div></td></tr></tbody></table></div><div class="gsc-adBlockInvisible"></div><div class="gsc-wrapper"><div class="gsc-adBlockInvisible"></div><div class="gsc-resultsbox-invisible"><div class="gsc-resultsRoot gsc-tabData gsc-tabdActive"><table cellspacing="0" cellpadding="0" class="gsc-resultsHeader"><tbody><tr><td class="gsc-twiddleRegionCell"><div class="gsc-twiddle"><div class="gsc-title">Web</div></div><div class="gsc-stats"></div><div class="gsc-results-selector gsc-all-results-active"><div class="gsc-result-selector gsc-one-result" title="show one result">&nbsp;</div><div class="gsc-result-selector gsc-more-results" title="show more results">&nbsp;</div><div class="gsc-result-selector gsc-all-results" title="show all results">&nbsp;</div></div></td><td class="gsc-configLabelCell"></td></tr></tbody></table><div><div class="gsc-expansionArea"></div></div></div></div></div></div><div class="gsc-modal-background-image" tabindex="0"></div></div></div></div>
+
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="./OpenCV_ Cascade Classifier_files/opencv-logo-small.png"></td>
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">OpenCV
+   &nbsp;<span id="projectnumber">3.1.0</span>
+   </div>
+   <div id="projectbrief">Open Source Computer Vision</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.8.9.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="http://docs.opencv.org/3.1.0/index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="http://docs.opencv.org/3.1.0/pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="http://docs.opencv.org/3.1.0/modules.html"><span>Modules</span></a></li>
+      <li><a href="http://docs.opencv.org/3.1.0/namespaces.html"><span>Namespaces</span></a></li>
+      <li><a href="http://docs.opencv.org/3.1.0/annotated.html"><span>Classes</span></a></li>
+      <li><a href="http://docs.opencv.org/3.1.0/files.html"><span>Files</span></a></li>
+      <li><a href="http://docs.opencv.org/3.1.0/examples.html"><span>Examples</span></a></li>
+      <li><a href="http://docs.opencv.org/3.1.0//3.0-last-rst"><span>Sphinx&nbsp;Documentation</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="./OpenCV_ Cascade Classifier_files/mag_sel.png" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()" alt="">
+          <input type="text" id="MSearchField" value="Search" accesskey="S" onfocus="searchBox.OnSearchFieldFocus(true)" onblur="searchBox.OnSearchFieldFocus(false)" onkeyup="searchBox.OnSearchFieldChange(event)">
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="./OpenCV_ Cascade Classifier_files/close.png" alt=""></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()" onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" onclick="searchBox.OnSelectItem(0)" href="javascript:void(0)"><span class="SelectionMark">•</span>All</a><a class="SelectItem" onclick="searchBox.OnSelectItem(1)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Classes</a><a class="SelectItem" onclick="searchBox.OnSelectItem(2)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Namespaces</a><a class="SelectItem" onclick="searchBox.OnSelectItem(3)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Files</a><a class="SelectItem" onclick="searchBox.OnSelectItem(4)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Functions</a><a class="SelectItem" onclick="searchBox.OnSelectItem(5)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Variables</a><a class="SelectItem" onclick="searchBox.OnSelectItem(6)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Typedefs</a><a class="SelectItem" onclick="searchBox.OnSelectItem(7)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Enumerations</a><a class="SelectItem" onclick="searchBox.OnSelectItem(8)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Enumerator</a><a class="SelectItem" onclick="searchBox.OnSelectItem(9)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Properties</a><a class="SelectItem" onclick="searchBox.OnSelectItem(10)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Friends</a><a class="SelectItem" onclick="searchBox.OnSelectItem(11)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Macros</a><a class="SelectItem" onclick="searchBox.OnSelectItem(12)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Modules</a><a class="SelectItem" onclick="searchBox.OnSelectItem(13)" href="javascript:void(0)"><span class="SelectionMark">&nbsp;</span>Pages</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" name="MSearchResults" id="MSearchResults" src="./OpenCV_ Cascade Classifier_files/saved_resource.html">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="http://docs.opencv.org/3.1.0/d9/df8/tutorial_root.html">OpenCV Tutorials</a></li><li class="navelem"><a class="el" href="http://docs.opencv.org/3.1.0/d2/d64/tutorial_table_of_content_objdetect.html">Object Detection (objdetect module)</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Cascade Classifier </div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><h2>Goal </h2>
+<p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the <a class="el" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html">cv::CascadeClassifier</a> class to detect objects in a video stream. Particularly, we will use the functions:<ul>
+<li><a class="el" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html#a1a5884c8cc749422f9eb77c2471958bc">cv::CascadeClassifier::load</a> to load a .xml classifier file. It can be either a Haar or a LBP classifer</li>
+<li><a class="el" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html#aaf8181cb63968136476ec4204ffca498">cv::CascadeClassifier::detectMultiScale</a> to perform the detection.</li>
+</ul>
+</li>
+</ul>
+<h2>Theory </h2>
+<h2>Code </h2>
+<p>This tutorial code's is shown lines below. You can also download it from <a href="https://github.com/Itseez/opencv/tree/master/samples/cpp/tutorial_code/objectDetection/objectDetection.cpp">here</a> . The second version (using LBP for face detection) can be <a href="https://github.com/Itseez/opencv/tree/master/samples/cpp/tutorial_code/objectDetection/objectDetection2.cpp">found here</a> </p><div class="fragment"><div class="line"><span class="preprocessor">#include "<a class="code" href="http://docs.opencv.org/3.1.0/d8/da3/objdetect_8hpp.html">opencv2/objdetect.hpp</a>"</span></div>
+<div class="line"><span class="preprocessor">#include "<a class="code" href="http://docs.opencv.org/3.1.0/d4/dd5/highgui_8hpp.html">opencv2/highgui.hpp</a>"</span></div>
+<div class="line"><span class="preprocessor">#include "<a class="code" href="http://docs.opencv.org/3.1.0/dd/d46/imgproc_8hpp.html">opencv2/imgproc.hpp</a>"</span></div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"></div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="http://docs.opencv.org/3.1.0/d8/dcc/namespacestd.html">std</a>;</div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="http://docs.opencv.org/3.1.0/d2/d75/namespacecv.html">cv</a>;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">/* Function Headers */</span></div>
+<div class="line"><span class="keywordtype">void</span> detectAndDisplay( Mat frame );</div>
+<div class="line"></div>
+<div class="line"><span class="comment">/* Global variables */</span></div>
+<div class="line"><a class="code" href="http://docs.opencv.org/3.1.0/d1/d8f/classcv_1_1String.html">String</a> face_cascade_name = <span class="stringliteral">"haarcascade_frontalface_alt.xml"</span>;</div>
+<div class="line"><a class="code" href="http://docs.opencv.org/3.1.0/d1/d8f/classcv_1_1String.html">String</a> eyes_cascade_name = <span class="stringliteral">"haarcascade_eye_tree_eyeglasses.xml"</span>;</div>
+<div class="line"><a class="code" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html">CascadeClassifier</a> face_cascade;</div>
+<div class="line"><a class="code" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html">CascadeClassifier</a> eyes_cascade;</div>
+<div class="line"><a class="code" href="http://docs.opencv.org/3.1.0/d1/d8f/classcv_1_1String.html">String</a> window_name = <span class="stringliteral">"Capture - Face detection"</span>;</div>
+<div class="line"></div>
+<div class="line"><span class="comment">/* @function main */</span></div>
+<div class="line"><span class="keywordtype">int</span> main( <span class="keywordtype">void</span> )</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="http://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html">VideoCapture</a> capture;</div>
+<div class="line">    Mat frame;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">//-- 1. Load the cascades</span></div>
+<div class="line">    <span class="keywordflow">if</span>( !face_cascade.<a class="code" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html#a1a5884c8cc749422f9eb77c2471958bc">load</a>( face_cascade_name ) ){ printf(<span class="stringliteral">"--(!)Error loading face cascade\n"</span>); <span class="keywordflow">return</span> -1; };</div>
+<div class="line">    <span class="keywordflow">if</span>( !eyes_cascade.<a class="code" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html#a1a5884c8cc749422f9eb77c2471958bc">load</a>( eyes_cascade_name ) ){ printf(<span class="stringliteral">"--(!)Error loading eyes cascade\n"</span>); <span class="keywordflow">return</span> -1; };</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">//-- 2. Read the video stream</span></div>
+<div class="line">    capture.<a class="code" href="http://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html#ab5b7391cd5ec50e7237e575a758f6f05">open</a>( -1 );</div>
+<div class="line">    <span class="keywordflow">if</span> ( ! capture.<a class="code" href="http://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html#ad62969b4aaa492f9ed021263d1a42f1b">isOpened</a>() ) { printf(<span class="stringliteral">"--(!)Error opening video capture\n"</span>); <span class="keywordflow">return</span> -1; }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">while</span> (  capture.<a class="code" href="http://docs.opencv.org/3.1.0/d8/dfe/classcv_1_1VideoCapture.html#a473055e77dd7faa4d26d686226b292c1">read</a>(frame) )</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">if</span>( frame.<a class="code" href="http://docs.opencv.org/3.1.0/d3/d63/classcv_1_1Mat.html#a17d0777aef52a7cfbdb8d04d189fa5c3">empty</a>() )</div>
+<div class="line">        {</div>
+<div class="line">            printf(<span class="stringliteral">" --(!) No captured frame -- Break!"</span>);</div>
+<div class="line">            <span class="keywordflow">break</span>;</div>
+<div class="line">        }</div>
+<div class="line"></div>
+<div class="line">        <span class="comment">//-- 3. Apply the classifier to the frame</span></div>
+<div class="line">        detectAndDisplay( frame );</div>
+<div class="line"></div>
+<div class="line">        <span class="keywordtype">int</span> c = <a class="code" href="http://docs.opencv.org/3.1.0/d7/dfc/group__highgui.html#ga5628525ad33f52eab17feebcfba38bd7">waitKey</a>(10);</div>
+<div class="line">        <span class="keywordflow">if</span>( (<span class="keywordtype">char</span>)c == 27 ) { <span class="keywordflow">break</span>; } <span class="comment">// escape</span></div>
+<div class="line">    }</div>
+<div class="line">    <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="comment">/* @function detectAndDisplay */</span></div>
+<div class="line"><span class="keywordtype">void</span> detectAndDisplay( Mat frame )</div>
+<div class="line">{</div>
+<div class="line">    std::vector&lt;Rect&gt; faces;</div>
+<div class="line">    Mat frame_gray;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="http://docs.opencv.org/3.1.0/d7/d1b/group__imgproc__misc.html#ga397ae87e1288a81d2363b61574eb8cab">cvtColor</a>( frame, frame_gray, <a class="code" href="http://docs.opencv.org/3.1.0/d7/d1b/group__imgproc__misc.html#gga4e0972be5de079fed4e3a10e24ef5ef0a353a4b8db9040165db4dacb5bcefb6ea">COLOR_BGR2GRAY</a> );</div>
+<div class="line">    <a class="code" href="http://docs.opencv.org/3.1.0/d6/dc7/group__imgproc__hist.html#ga7e54091f0c937d49bf84152a16f76d6e">equalizeHist</a>( frame_gray, frame_gray );</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">//-- Detect faces</span></div>
+<div class="line">    face_cascade.<a class="code" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html#aaf8181cb63968136476ec4204ffca498">detectMultiScale</a>( frame_gray, faces, 1.1, 2, 0|<a class="code" href="http://docs.opencv.org/3.1.0/d5/d54/group__objdetect.html#ggaf8729b87a4ca8e16b9b0e747de6af27da1d35c5234686c05c075d224efc91d673">CASCADE_SCALE_IMAGE</a>, <a class="code" href="http://docs.opencv.org/3.1.0/dc/d84/group__core__basic.html#ga346f563897249351a34549137c8532a0">Size</a>(30, 30) );</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">for</span>( <span class="keywordtype">size_t</span> i = 0; i &lt; faces.size(); i++ )</div>
+<div class="line">    {</div>
+<div class="line">        <a class="code" href="http://docs.opencv.org/3.1.0/db/d4e/classcv_1_1Point__.html">Point</a> center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );</div>
+<div class="line">        <a class="code" href="http://docs.opencv.org/3.1.0/d6/d6e/group__imgproc__draw.html#ga28b2267d35786f5f890ca167236cbc69">ellipse</a>( frame, center, <a class="code" href="http://docs.opencv.org/3.1.0/dc/d84/group__core__basic.html#ga346f563897249351a34549137c8532a0">Size</a>( faces[i].width/2, faces[i].height/2), 0, 0, 360, <a class="code" href="http://docs.opencv.org/3.1.0/dc/d84/group__core__basic.html#ga599fe92e910c027be274233eccad7beb">Scalar</a>( 255, 0, 255 ), 4, 8, 0 );</div>
+<div class="line"></div>
+<div class="line">        Mat faceROI = frame_gray( faces[i] );</div>
+<div class="line">        std::vector&lt;Rect&gt; eyes;</div>
+<div class="line"></div>
+<div class="line">        <span class="comment">//-- In each face, detect eyes</span></div>
+<div class="line">        eyes_cascade.<a class="code" href="http://docs.opencv.org/3.1.0/d1/de5/classcv_1_1CascadeClassifier.html#aaf8181cb63968136476ec4204ffca498">detectMultiScale</a>( faceROI, eyes, 1.1, 2, 0 |<a class="code" href="http://docs.opencv.org/3.1.0/d5/d54/group__objdetect.html#ggaf8729b87a4ca8e16b9b0e747de6af27da1d35c5234686c05c075d224efc91d673">CASCADE_SCALE_IMAGE</a>, <a class="code" href="http://docs.opencv.org/3.1.0/dc/d84/group__core__basic.html#ga346f563897249351a34549137c8532a0">Size</a>(30, 30) );</div>
+<div class="line"></div>
+<div class="line">        <span class="keywordflow">for</span>( <span class="keywordtype">size_t</span> j = 0; j &lt; eyes.size(); j++ )</div>
+<div class="line">        {</div>
+<div class="line">            <a class="code" href="http://docs.opencv.org/3.1.0/db/d4e/classcv_1_1Point__.html">Point</a> eye_center( faces[i].x + eyes[j].x + eyes[j].width/2, faces[i].y + eyes[j].y + eyes[j].height/2 );</div>
+<div class="line">            <span class="keywordtype">int</span> radius = <a class="code" href="http://docs.opencv.org/3.1.0/db/de0/group__core__utils.html#ga085eca238176984a0b72df2818598d85">cvRound</a>( (eyes[j].width + eyes[j].height)*0.25 );</div>
+<div class="line">            <a class="code" href="http://docs.opencv.org/3.1.0/d9/db7/group__datasets__gr.html#gga610754124ced68d1f05760b5948fbb76a6f0d8b2d9e3e947b2a5c1eff9e81ee95">circle</a>( frame, eye_center, radius, <a class="code" href="http://docs.opencv.org/3.1.0/dc/d84/group__core__basic.html#ga599fe92e910c027be274233eccad7beb">Scalar</a>( 255, 0, 0 ), 4, 8, 0 );</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line">    <span class="comment">//-- Show what you got</span></div>
+<div class="line">    <a class="code" href="http://docs.opencv.org/3.1.0/d7/dfc/group__highgui.html#ga453d42fe4cb60e5723281a89973ee563">imshow</a>( window_name, frame );</div>
+<div class="line">}</div>
+</div><!-- fragment --> <h2>Explanation </h2>
+<h2>Result </h2>
+<ol type="1">
+<li><p class="startli">Here is the result of running the code above and using as input the video stream of a build-in webcam:</p>
+<div class="image">
+<img src="./OpenCV_ Cascade Classifier_files/Cascade_Classifier_Tutorial_Result_Haar.jpg" alt="Cascade_Classifier_Tutorial_Result_Haar.jpg">
+</div>
+<p class="startli">Remember to copy the files <em>haarcascade_frontalface_alt.xml</em> and <em>haarcascade_eye_tree_eyeglasses.xml</em> in your current directory. They are located in <em>opencv/data/haarcascades</em></p>
+</li>
+<li><p class="startli">This is the result of using the file <em>lbpcascade_frontalface.xml</em> (LBP trained) for the face detection. For the eyes we keep using the file used in the tutorial.</p>
+<div class="image">
+<img src="./OpenCV_ Cascade Classifier_files/Cascade_Classifier_Tutorial_Result_LBP.jpg" alt="Cascade_Classifier_Tutorial_Result_LBP.jpg">
+</div>
+ </li>
+</ol>
+</div></div><!-- contents -->
+<!-- HTML footer for doxygen 1.8.6-->
+<!-- start footer part -->
+<hr class="footer"><address class="footer"><small>
+Generated on Fri Dec 18 2015 16:45:22 for OpenCV by &nbsp;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="./OpenCV_ Cascade Classifier_files/doxygen.png" alt="doxygen">
+</a> 1.8.9.1
+</small></address>
+
+
+<table cellspacing="0" cellpadding="0" class="gstl_50 gssb_c" style="width: 896px; display: none; top: 41px; position: absolute; left: 14px;"><tbody><tr><td class="gssb_f"></td><td class="gssb_e" style="width: 100%;"></td></tr></tbody></table><div id="SL_balloon_obj" alt="0" style="display: block;"><div id="SL_button" class="SL_ImTranslatorLogo" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/imtranslator-s.png&quot;); display: none;"></div><div id="SL_shadow_translation_result2" style="display: none;"></div><div id="SL_shadow_translator"><div id="SL_planshet" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/bg2.png&quot;) rgb(244, 245, 245);"><div id="SL_arrow_up" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/up.png&quot;);"></div><div id="SL_providers"><div class="SL_BL_LABLE_ON" title="Google" id="SL_P0">G</div><div class="SL_BL_LABLE_ON" title="Microsoft" id="SL_P1">M</div><div class="SL_BL_LABLE_ON" title="Translator" id="SL_P2">T</div></div><div id="SL_alert_bbl" style="display: none;"><div id="SLHKclose" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/delete.png&quot;);"></div><div id="SL_alert_cont"></div></div><div id="SL_TB"><div id="SL_bubblelogo" class="SL_ImTranslatorLogo" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/imtranslator-s.png&quot;);"></div><table id="SL_tables" cellspacing="1"><tr><td class="SL_td" width="10%" align="right"><input id="SL_locer" type="checkbox" title="Зафиксировать язык"></td><td class="SL_td" width="20%" align="left"><select id="SL_lng_from"><option value="auto">Определить язык</option><option value="az">Азербайджанский</option><option value="sq">Албанский</option><option value="en">Английский</option><option value="ar">Арабский</option><option value="hy">Армянский</option><option value="af">Африкаанс</option><option value="eu">Баскский</option><option value="be">Белорусский</option><option value="bn">Бенгальский</option><option value="my">Бирманский</option><option value="bg">Болгарский</option><option value="bs">Боснийский</option><option value="cy">Валлийский</option><option value="hu">Венгерский</option><option value="vi">Вьетнамский</option><option value="gl">Галисийский</option><option value="el">Греческий</option><option value="ka">Грузинский</option><option value="gu">Гуджарати</option><option value="da">Датский</option><option value="zu">Зулу</option><option value="iw">Иврит</option><option value="ig">Игбо</option><option value="yi">Идиш</option><option value="id">Индонезийский</option><option value="ga">Ирландский</option><option value="is">Исландский</option><option value="es">Испанский</option><option value="it">Итальянский</option><option value="yo">Йоруба</option><option value="kk">Казахский</option><option value="kn">Каннада</option><option value="ca">Каталанский</option><option value="zh-CN">Китайский (Трад)</option><option value="zh-TW">Китайский (Упр)</option><option value="ko">Корейский</option><option value="ht">Креольский (Гаити)</option><option value="km">Кхмерский</option><option value="lo">Лаосский</option><option value="la">Латинский</option><option value="lv">Латышский</option><option value="lt">Литовский</option><option value="mk">Македонский</option><option value="mg">Малагасийский</option><option value="ms">Малайский</option><option value="ml">Малайялам</option><option value="mt">Мальтийский</option><option value="mi">Маори</option><option value="mr">Маратхи</option><option value="mn">Монгольский</option><option value="de">Немецкий</option><option value="ne">Непали</option><option value="nl">Нидерландский</option><option value="no">Норвежский</option><option value="pa">Панджаби</option><option value="fa">Персидский</option><option value="pl">Польский</option><option value="pt">Португальский</option><option value="ro">Румынский</option><option value="ru">Русский</option><option value="ceb">Себуанский</option><option value="sr">Сербский</option><option value="st">Сесото</option><option value="si">Сингальский</option><option value="sk">Словацкий</option><option value="sl">Словенский</option><option value="so">Сомали</option><option value="sw">Суахили</option><option value="su">Суданский</option><option value="tl">Тагальский</option><option value="tg">Таджикский</option><option value="th">Тайский</option><option value="ta">Тамильский</option><option value="te">Телугу</option><option value="tr">Турецкий</option><option value="uz">Узбекский</option><option value="uk">Украинский</option><option value="ur">Урду</option><option value="fi">Финский</option><option value="fr">Французский</option><option value="ha">Хауса</option><option value="hi">Хинди</option><option value="hmn">Хмонг</option><option value="hr">Хорватский</option><option value="ny">Чева</option><option value="cs">Чешский</option><option value="sv">Шведский</option><option value="eo">Эсперанто</option><option value="et">Эстонский</option><option value="jw">Яванский</option><option value="ja">Японский</option></select></td><td class="SL_td" width="3" align="center"><div id="SL_switch_b" title="Перевернуть языки" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/switchb.png&quot;);"></div></td><td class="SL_td" width="20%" align="left"><select id="SL_lng_to"><option value="az">Азербайджанский</option><option value="sq">Албанский</option><option value="en">Английский</option><option value="ar">Арабский</option><option value="hy">Армянский</option><option value="af">Африкаанс</option><option value="eu">Баскский</option><option value="be">Белорусский</option><option value="bn">Бенгальский</option><option value="my">Бирманский</option><option value="bg">Болгарский</option><option value="bs">Боснийский</option><option value="cy">Валлийский</option><option value="hu">Венгерский</option><option value="vi">Вьетнамский</option><option value="gl">Галисийский</option><option value="el">Греческий</option><option value="ka">Грузинский</option><option value="gu">Гуджарати</option><option value="da">Датский</option><option value="zu">Зулу</option><option value="iw">Иврит</option><option value="ig">Игбо</option><option value="yi">Идиш</option><option value="id">Индонезийский</option><option value="ga">Ирландский</option><option value="is">Исландский</option><option value="es">Испанский</option><option value="it">Итальянский</option><option value="yo">Йоруба</option><option value="kk">Казахский</option><option value="kn">Каннада</option><option value="ca">Каталанский</option><option value="zh-CN">Китайский (Трад)</option><option value="zh-TW">Китайский (Упр)</option><option value="ko">Корейский</option><option value="ht">Креольский (Гаити)</option><option value="km">Кхмерский</option><option value="lo">Лаосский</option><option value="la">Латинский</option><option value="lv">Латышский</option><option value="lt">Литовский</option><option value="mk">Македонский</option><option value="mg">Малагасийский</option><option value="ms">Малайский</option><option value="ml">Малайялам</option><option value="mt">Мальтийский</option><option value="mi">Маори</option><option value="mr">Маратхи</option><option value="mn">Монгольский</option><option value="de">Немецкий</option><option value="ne">Непали</option><option value="nl">Нидерландский</option><option value="no">Норвежский</option><option value="pa">Панджаби</option><option value="fa">Персидский</option><option value="pl">Польский</option><option value="pt">Португальский</option><option value="ro">Румынский</option><option selected="selected" value="ru">Русский</option><option value="ceb">Себуанский</option><option value="sr">Сербский</option><option value="st">Сесото</option><option value="si">Сингальский</option><option value="sk">Словацкий</option><option value="sl">Словенский</option><option value="so">Сомали</option><option value="sw">Суахили</option><option value="su">Суданский</option><option value="tl">Тагальский</option><option value="tg">Таджикский</option><option value="th">Тайский</option><option value="ta">Тамильский</option><option value="te">Телугу</option><option value="tr">Турецкий</option><option value="uz">Узбекский</option><option value="uk">Украинский</option><option value="ur">Урду</option><option value="fi">Финский</option><option value="fr">Французский</option><option value="ha">Хауса</option><option value="hi">Хинди</option><option value="hmn">Хмонг</option><option value="hr">Хорватский</option><option value="ny">Чева</option><option value="cs">Чешский</option><option value="sv">Шведский</option><option value="eo">Эсперанто</option><option value="et">Эстонский</option><option value="jw">Яванский</option><option value="ja">Японский</option></select></td><td class="SL_td" width="21%" align="center"> </td><td class="SL_td" width="6%" align="center"><div id="SL_TTS_voice" title="Прослушать" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/tts-voice.png&quot;);"></div></td><td class="SL_td" width="6%" align="center"><div id="SL_copy" title="Скопировать" class="SL_copy" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/copy_hand.png&quot;);"></div></td><td class="SL_td" width="6%" align="center"><div id="SL_bbl_font_patch"></div><div id="SL_bbl_font" title="Размер шрифта" class="SL_bbl_font" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/font-off.png&quot;);"></div></td><td class="SL_td" width="6%" align="center"><div id="SL_TH" title="История переводов" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/history.png&quot;);"></div></td><td class="SL_td" width="10%"> </td><td class="SL_td" width="8%" align="right"><div id="SL_pin" title="Закрепить всплывающее окно" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/pin-on.png&quot;);"></div></td></tr></table></div></div><div id="SL_shadow_translation_result" style="visibility: visible;"></div><div id="SL_loading" class="SL_loading" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/loading.gif&quot;);"></div><div id="SL_player2"></div><div id="SL_alert100">Звуковая функция ограничена 200 символами</div><div id="SL_Balloon_options" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/bg3.png&quot;) rgb(255, 255, 255);"><div id="SL_arrow_down" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/down.png&quot;);"></div><table width="100%"><tr><td width="18%" align="left" height="16"><div id="SL_bbl_donate" title="Сделать пожертвование" style="background: url(&quot;chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/img/util/donate2.png&quot;);"></div></td><td width="68%" align="center"><a href="chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/html/options/options.html?bbl" target="_blank" class="SL_options" title="Показать настройки">Настройки</a> : <a href="chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/html/options/options.html?hist" target="_blank" class="SL_options" title="История переводов">История</a> : <a href="http://about.imtranslator.net/tutorials/presentations/imtranslator-for-chrome/chrome-bubble-translator/" target="_blank" class="SL_options" title="Справка ImTranslator">Справка</a> : <a href="chrome-extension://noaijdpnepcgjemiklgfkcfbkokogabh/content/html/options/options.html?feed" target="_blank" class="SL_options" title="Обратная связь">Обратная связь</a></td><td width="15%" align="right"><span id="SL_Balloon_Close" title="Закрыть">Закрыть</span></td></tr></table></div></div></div></body></html>
